@@ -1,0 +1,54 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: abhi-smart-e
+  region: ap-south-1
+  version: "1.33"
+
+autoModeConfig:
+  enabled: false
+
+iam:
+  withOIDC: true
+
+vpc:
+  id: vpc-03a2794d55e651007
+  clusterEndpoints:
+    publicAccess: true
+    privateAccess: true
+  subnets:
+    public:
+      ap-south-1b:
+        id: subnet-05247e39ed1edfb7d
+      ap-south-1c:
+        id: subnet-0ab92ea131d5ac094
+    private:
+      ap-south-1b:
+        id: subnet-07a13db28675ed45f
+      ap-south-1c:
+        id: subnet-00bd405f4d235d933
+
+addons:
+  - name: vpc-cni
+  - name: kube-proxy
+  - name: coredns
+
+managedNodeGroups:
+  - name: ubuntu-ng
+    instanceType: t3.small
+    minSize: 1
+    desiredCapacity: 1
+    maxSize: 2
+    privateNetworking: true
+    ami: ami-0845d897b520b0df7
+    amiFamily: Ubuntu2204
+    iam:
+      attachPolicyARNs:
+        - arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy
+        - arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly
+        - arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore
+        - arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy
+    overrideBootstrapCommand: |
+      #!/bin/bash
+      /etc/eks/bootstrap.sh abhi-smart-e --kubelet-extra-args '--node-labels=eks.amazonaws.com/nodegroup=ubuntu-ng'

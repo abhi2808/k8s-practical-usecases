@@ -1,0 +1,26 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: prac-eks-abhi
+  region: ap-south-1
+
+vpc:
+  id: vpc-03a2794d55e651007
+  securityGroup: sg-0f38b201776ad4d94
+  subnets:
+    private:
+      ap-south-1a:
+        id: subnet-04044673abfb057f3
+      ap-south-1b:
+        id: subnet-0826a167233143d44
+
+nodeGroups:
+  - name: ubuntu-private-ng
+    amiFamily: Ubuntu2204
+    instanceType: t3.small
+    desiredCapacity: 2
+    minSize: 2
+    maxSize: 4
+    privateNetworking: true
+

@@ -1,0 +1,17 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: result-vs
+spec:
+  hosts:
+  - "*"
+  gateways:
+  - voting-gateway
+  http:
+  - match:
+    - port: 81
+    route:
+    - destination:
+        host: result
+        port:
+          number: 80

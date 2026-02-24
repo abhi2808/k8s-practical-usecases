@@ -1,0 +1,26 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: abhinav-istio-mesh
+  region: ap-south-1
+
+managedNodeGroups:
+  - name: ubuntu-nodes
+    amiFamily: Ubuntu2204
+    launchTemplate:
+      id: lt-09696041f02b6470e
+      version: "2"
+    minSize: 1
+    desiredCapacity: 2
+    maxSize: 3
+    privateNetworking: true
+    subnets:
+      - subnet-0a84ff1d27a0ec841
+      - subnet-0d3c0e54898968775
+    iam:
+      attachPolicyARNs:
+        - arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy
+        - arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly
+        - arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore
+        - arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy

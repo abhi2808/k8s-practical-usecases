@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: brdep
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: basic-react
+  template:
+    metadata:
+      name: basic-react
+      labels:
+        app: basic-react
+    spec:
+      containers:
+        - name: basic-react
+          image: 183295435445.dkr.ecr.ap-south-1.amazonaws.com/abhinav/basic-react:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+
+
+

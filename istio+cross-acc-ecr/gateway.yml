@@ -1,0 +1,20 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: voting-gateway
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+  - port:
+      number: 80
+      name: http-vote
+      protocol: HTTP
+    hosts:
+    - "*"
+  - port:
+      number: 81
+      name: http-result
+      protocol: HTTP
+    hosts:
+    - "*"

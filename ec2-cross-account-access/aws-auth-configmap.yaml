@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: aws-auth
+  namespace: kube-system
+data:
+  mapRoles: |
+    - rolearn: arn:aws:iam::183295435445:role/EKS-CrossAccount-Access-Role
+      username: eks-cross-account-user
+      groups:
+        - system:masters
+  mapUsers: |
+    - userarn: arn:aws:sts::183295435445:assumed-role/EKS-CrossAccount-Access-Role/botocore-session-1770890888
+      username: eks-cross-account-user
+      groups:
+        - system:masters
