@@ -141,7 +141,7 @@ App Pod :80
 
 ## CLI implementation
 
-Minfy@AbhinavBisht MINGW64 ~/OneDrive - MINFY TECHNOLOGIES PRIVATE LIMITED/desktop/k8s-use-cases/istio+cross-acc-ecr (main)
+AbhinavBisht MINGW64 ~/OneDrive/desktop/k8s-use-cases/istio+cross-acc-ecr (main)
 $ # Download Istio 1.24.3 (latest stable)
 curl -L https://github.com/istio/istio/releases/download/1.24.3/istio-1.24.3-win.zip -o istio.zip
 
@@ -172,7 +172,7 @@ Archive:  istio.zip
 Istio is not present in the cluster: no running Istio pods in namespace "istio-system"
 client version: 1.24.3
 
-Minfy@AbhinavBisht MINGW64 ~/OneDrive - MINFY TECHNOLOGIES PRIVATE LIMITED/desktop/k8s-use-cases/istio+cross-acc-ecr (main)
+AbhinavBisht MINGW64 ~/OneDrive/desktop/k8s-use-cases/istio+cross-acc-ecr (main)
 $ istioctl install --set profile=demo -y
         |\
         | \
@@ -190,50 +190,50 @@ ____________________
      \_____/
 
 WARNING: Istio 1.24.0 may be out of support (EOL) already: see https://istio.io/latest/docs/releases/supported-releases/ for supported releases
-✔ Istio core installed ⛵️
+Istio core installed
 
-✔ Istiod installed 🧠
-✔ Egress gateways installed 🛫
-✔ Ingress gateways installed 🛬
-✔ Installation complete
+Istiod installed
+Egress gateways installed
+Ingress gateways installed
+Installation complete
 
-Minfy@AbhinavBisht MINGW64 ~/OneDrive - MINFY TECHNOLOGIES PRIVATE LIMITED/desktop/k8s-use-cases/istio+cross-acc-ecr (main)
+AbhinavBisht MINGW64 ~/OneDrive/desktop/k8s-use-cases/istio+cross-acc-ecr (main)
 $ ls
 cl.yml  example-voting-app/  istio-1.24.3/  istio.zip  nodegroup-config.yaml  readme.md
 
-Minfy@AbhinavBisht MINGW64 ~/OneDrive - MINFY TECHNOLOGIES PRIVATE LIMITED/desktop/k8s-use-cases/istio+cross-acc-ecr (main)
+AbhinavBisht MINGW64 ~/OneDrive/desktop/k8s-use-cases/istio+cross-acc-ecr (main)
 $ mkdir deployments
 
-Minfy@AbhinavBisht MINGW64 ~/OneDrive - MINFY TECHNOLOGIES PRIVATE LIMITED/desktop/k8s-use-cases/istio+cross-acc-ecr (main)
+AbhinavBisht MINGW64 ~/OneDrive/desktop/k8s-use-cases/istio+cross-acc-ecr (main)
 $ cd deployments/
 
-Minfy@AbhinavBisht MINGW64 ~/OneDrive - MINFY TECHNOLOGIES PRIVATE LIMITED/desktop/k8s-use-cases/istio+cross-acc-ecr/deployments (main)
+AbhinavBisht MINGW64 ~/OneDrive/desktop/k8s-use-cases/istio+cross-acc-ecr/deployments (main)
 $ touch vote.yml result.yml worker.yml redis.yml
 
-Minfy@AbhinavBisht MINGW64 ~/OneDrive - MINFY TECHNOLOGIES PRIVATE LIMITED/desktop/k8s-use-cases/istio+cross-acc-ecr/deployments (main)
+AbhinavBisht MINGW64 ~/OneDrive/desktop/k8s-use-cases/istio+cross-acc-ecr/deployments (main)
 $ touch db.yml
 
-Minfy@AbhinavBisht MINGW64 ~/OneDrive - MINFY TECHNOLOGIES PRIVATE LIMITED/desktop/k8s-use-cases/istio+cross-acc-ecr/deployments (main)
+AbhinavBisht MINGW64 ~/OneDrive/desktop/k8s-use-cases/istio+cross-acc-ecr/deployments (main)
 $ cd ..
 
-Minfy@AbhinavBisht MINGW64 ~/OneDrive - MINFY TECHNOLOGIES PRIVATE LIMITED/desktop/k8s-use-cases/istio+cross-acc-ecr (main)
+AbhinavBisht MINGW64 ~/OneDrive/desktop/k8s-use-cases/istio+cross-acc-ecr (main)
 $ kubectl get pods -n istio-system
 NAME                                    READY   STATUS    RESTARTS   AGE
 istio-egressgateway-5868fcbc58-5xjfq    1/1     Running   0          73m
 istio-ingressgateway-5896f57fbb-sdskg   1/1     Running   0          73m
 istiod-6fb9db6b6-5sgwv                  1/1     Running   0          73m
 
-Minfy@AbhinavBisht MINGW64 ~/OneDrive - MINFY TECHNOLOGIES PRIVATE LIMITED/desktop/k8s-use-cases/istio+cross-acc-ecr (main)
+AbhinavBisht MINGW64 ~/OneDrive/desktop/k8s-use-cases/istio+cross-acc-ecr (main)
 $ cd deployments-svc/
 
-Minfy@AbhinavBisht MINGW64 ~/OneDrive - MINFY TECHNOLOGIES PRIVATE LIMITED/desktop/k8s-use-cases/istio+cross-acc-ecr/deployments-svc (main)
+AbhinavBisht MINGW64 ~/OneDrive/desktop/k8s-use-cases/istio+cross-acc-ecr/deployments-svc (main)
 $ kubectl apply -f k8s-specifications/
 error: the path "k8s-specifications/" does not exist
 
-Minfy@AbhinavBisht MINGW64 ~/OneDrive - MINFY TECHNOLOGIES PRIVATE LIMITED/desktop/k8s-use-cases/istio+cross-acc-ecr/deployments-svc (main)
+AbhinavBisht MINGW64 ~/OneDrive/desktop/k8s-use-cases/istio+cross-acc-ecr/deployments-svc (main)
 $ cd ..
 
-Minfy@AbhinavBisht MINGW64 ~/OneDrive - MINFY TECHNOLOGIES PRIVATE LIMITED/desktop/k8s-use-cases/istio+cross-acc-ecr (main)
+AbhinavBisht MINGW64 ~/OneDrive/desktop/k8s-use-cases/istio+cross-acc-ecr (main)
 $ kubectl apply -f deployments-svc/
 service/db created
 deployment.apps/db created
@@ -245,7 +245,7 @@ service/vote created
 deployment.apps/worker created
 error: error validating "deployments-svc\\vote.yml": error validating data: apiVersion not set; if you choose to ignore these errors, turn validation off with --validate=false
 
-Minfy@AbhinavBisht MINGW64 ~/OneDrive - MINFY TECHNOLOGIES PRIVATE LIMITED/desktop/k8s-use-cases/istio+cross-acc-ecr (main)
+AbhinavBisht MINGW64 ~/OneDrive/desktop/k8s-use-cases/istio+cross-acc-ecr (main)
 $ kubectl delete -f deployments-svc/
 service "db" deleted from default namespace
 deployment.apps "db" deleted from default namespace
@@ -257,7 +257,7 @@ service "vote" deleted from default namespace
 deployment.apps "worker" deleted from default namespace
 Error from server (NotFound): error when deleting "deployments-svc\\vote.yml": deployments.apps "vote" not found
 
-Minfy@AbhinavBisht MINGW64 ~/OneDrive - MINFY TECHNOLOGIES PRIVATE LIMITED/desktop/k8s-use-cases/istio+cross-acc-ecr (main)
+AbhinavBisht MINGW64 ~/OneDrive/desktop/k8s-use-cases/istio+cross-acc-ecr (main)
 $ kubectl apply -f deployments-svc/
 service/db created
 deployment.apps/db created
@@ -269,7 +269,7 @@ service/vote created
 deployment.apps/vote created
 deployment.apps/worker created
 
-Minfy@AbhinavBisht MINGW64 ~/OneDrive - MINFY TECHNOLOGIES PRIVATE LIMITED/desktop/k8s-use-cases/istio+cross-acc-ecr (main)
+AbhinavBisht MINGW64 ~/OneDrive/desktop/k8s-use-cases/istio+cross-acc-ecr (main)
 $ kubectl get deployments
 NAME     READY   UP-TO-DATE   AVAILABLE   AGE
 db       1/1     1            1           22s
@@ -278,7 +278,7 @@ result   2/2     2            2           22s
 vote     1/2     2            1           22s
 worker   1/2     2            1           22s
 
-Minfy@AbhinavBisht MINGW64 ~/OneDrive - MINFY TECHNOLOGIES PRIVATE LIMITED/desktop/k8s-use-cases/istio+cross-acc-ecr (main)
+AbhinavBisht MINGW64 ~/OneDrive/desktop/k8s-use-cases/istio+cross-acc-ecr (main)
 $ kubectl get deployments
 NAME     READY   UP-TO-DATE   AVAILABLE   AGE
 db       1/1     1            1           33s
@@ -287,7 +287,7 @@ result   2/2     2            2           33s
 vote     1/2     2            1           33s
 worker   2/2     2            2           33s
 
-Minfy@AbhinavBisht MINGW64 ~/OneDrive - MINFY TECHNOLOGIES PRIVATE LIMITED/desktop/k8s-use-cases/istio+cross-acc-ecr (main)
+AbhinavBisht MINGW64 ~/OneDrive/desktop/k8s-use-cases/istio+cross-acc-ecr (main)
 $ kubectl delete -f deployments-svc/
 service "db" deleted from default namespace
 deployment.apps "db" deleted from default namespace
@@ -299,7 +299,7 @@ service "vote" deleted from default namespace
 deployment.apps "vote" deleted from default namespace
 deployment.apps "worker" deleted from default namespace
 
-Minfy@AbhinavBisht MINGW64 ~/OneDrive - MINFY TECHNOLOGIES PRIVATE LIMITED/desktop/k8s-use-cases/istio+cross-acc-ecr (main)
+AbhinavBisht MINGW64 ~/OneDrive/desktop/k8s-use-cases/istio+cross-acc-ecr (main)
 $ kubectl apply -f deployments-svc/
 service/db created
 deployment.apps/db created
@@ -311,7 +311,7 @@ service/vote created
 deployment.apps/vote created
 deployment.apps/worker created
 
-Minfy@AbhinavBisht MINGW64 ~/OneDrive - MINFY TECHNOLOGIES PRIVATE LIMITED/desktop/k8s-use-cases/istio+cross-acc-ecr (main)
+AbhinavBisht MINGW64 ~/OneDrive/desktop/k8s-use-cases/istio+cross-acc-ecr (main)
 $ kubectl get deployments
 NAME     READY   UP-TO-DATE   AVAILABLE   AGE
 db       1/1     1            1           17s
@@ -320,7 +320,7 @@ result   2/2     2            2           16s
 vote     1/2     2            1           16s
 worker   1/2     2            1           16s
 
-Minfy@AbhinavBisht MINGW64 ~/OneDrive - MINFY TECHNOLOGIES PRIVATE LIMITED/desktop/k8s-use-cases/istio+cross-acc-ecr (main)
+AbhinavBisht MINGW64 ~/OneDrive/desktop/k8s-use-cases/istio+cross-acc-ecr (main)
 $ kubectl get svc
 NAME         TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)    AGE
 db           ClusterIP   10.100.124.80   <none>        5432/TCP   25s
@@ -329,7 +329,7 @@ redis        ClusterIP   10.100.70.36    <none>        6379/TCP   25s
 result       ClusterIP   10.100.194.76   <none>        80/TCP     25s
 vote         ClusterIP   10.100.57.225   <none>        80/TCP     24s
 
-Minfy@AbhinavBisht MINGW64 ~/OneDrive - MINFY TECHNOLOGIES PRIVATE LIMITED/desktop/k8s-use-cases/istio+cross-acc-ecr (main)
+AbhinavBisht MINGW64 ~/OneDrive/desktop/k8s-use-cases/istio+cross-acc-ecr (main)
 $ kubectl get pods
 NAME                      READY   STATUS    RESTARTS   AGE
 db-74574d66dd-tft4b       1/1     Running   0          77s
@@ -341,15 +341,15 @@ vote-65cff6f9c9-zj75l     1/1     Running   0          76s
 worker-6f85695f94-64xl6   1/1     Running   0          76s
 worker-6f85695f94-glxkc   1/1     Running   0          76s
 
-Minfy@AbhinavBisht MINGW64 ~/OneDrive - MINFY TECHNOLOGIES PRIVATE LIMITED/desktop/k8s-use-cases/istio+cross-acc-ecr (main)
+AbhinavBisht MINGW64 ~/OneDrive/desktop/k8s-use-cases/istio+cross-acc-ecr (main)
 $ kubectl exec -it $(kubectl get pod -l app=vote -o jsonpath='{.items[0].metadata.name}') -- wget -qO- http://localhost:80
 error: Internal error occurred: Internal error occurred: error executing command in container: failed to exec in container: failed to start exec "a1b9c76deaac3e1e6d5cd18af71f1aaf4facb6545cfe6a9db7b91a8668e19b54": OCI runtime exec failed: exec failed: unable to start container process: exec: "wget": executable file not found in $PATH: unknown
 
-Minfy@AbhinavBisht MINGW64 ~/OneDrive - MINFY TECHNOLOGIES PRIVATE LIMITED/desktop/k8s-use-cases/istio+cross-acc-ecr (main)
+AbhinavBisht MINGW64 ~/OneDrive/desktop/k8s-use-cases/istio+cross-acc-ecr (main)
 $ kubectl exec -it $(kubectl get pod -l app=result -o jsonpath='{.items[0].metadata.name}') -- wget -qO- http://localhost:80
 error: Internal error occurred: Internal error occurred: error executing command in container: failed to exec in container: failed to start exec "e97d38fe5111180eb477dec8ec18147c4d0abfe951b32e62d4f0ab2ab3726cf1": OCI runtime exec failed: exec failed: unable to start container process: exec: "wget": executable file not found in $PATH: unknown
 
-Minfy@AbhinavBisht MINGW64 ~/OneDrive - MINFY TECHNOLOGIES PRIVATE LIMITED/desktop/k8s-use-cases/istio+cross-acc-ecr (main)
+AbhinavBisht MINGW64 ~/OneDrive/desktop/k8s-use-cases/istio+cross-acc-ecr (main)
 $ kubectl logs -l app=worker
 Waiting for db
 Waiting for db
@@ -360,15 +360,15 @@ Connected to db
 Found redis at 10.100.70.36
 Connecting to redis
 
-Minfy@AbhinavBisht MINGW64 ~/OneDrive - MINFY TECHNOLOGIES PRIVATE LIMITED/desktop/k8s-use-cases/istio+cross-acc-ecr (main)
+AbhinavBisht MINGW64 ~/OneDrive/desktop/k8s-use-cases/istio+cross-acc-ecr (main)
 $ kubectl exec -it $(kubectl get pod -l app=redis -o jsonpath='{.items[0].metadata.name}') -- redis-cli ping
 # Should return PONG
 PONG
 
-Minfy@AbhinavBisht MINGW64 ~/OneDrive - MINFY TECHNOLOGIES PRIVATE LIMITED/desktop/k8s-use-cases/istio+cross-acc-ecr (main)
+AbhinavBisht MINGW64 ~/OneDrive/desktop/k8s-use-cases/istio+cross-acc-ecr (main)
 $ ^C
 
-Minfy@AbhinavBisht MINGW64 ~/OneDrive - MINFY TECHNOLOGIES PRIVATE LIMITED/desktop/k8s-use-cases/istio+cross-acc-ecr (main)
+AbhinavBisht MINGW64 ~/OneDrive/desktop/k8s-use-cases/istio+cross-acc-ecr (main)
 $ # Test vote
 kubectl exec -it $(kubectl get pod -l app=vote -o jsonpath='{.items[0].metadata.name}') -- curl http://localhost:80
 
@@ -451,7 +451,7 @@ kubectl exec -it $(kubectl get pod -l app=result -o jsonpath='{.items[0].metadat
   </body>
 </html>
 
-Minfy@AbhinavBisht MINGW64 ~/OneDrive - MINFY TECHNOLOGIES PRIVATE LIMITED/desktop/k8s-use-cases/istio+cross-acc-ecr (main)
+AbhinavBisht MINGW64 ~/OneDrive/desktop/k8s-use-cases/istio+cross-acc-ecr (main)
 $ # Label namespace
 kubectl label namespace default istio-injection=enabled
 
@@ -498,7 +498,7 @@ result-dd5458665-xvzzc    0/1     Error             0          8m44s
 result-dd5458665-xvzzc    0/1     Error             0          8m44s
 
 
-Minfy@AbhinavBisht MINGW64 ~/OneDrive - MINFY TECHNOLOGIES PRIVATE LIMITED/desktop/k8s-use-cases/istio+cross-acc-ecr (main)
+AbhinavBisht MINGW64 ~/OneDrive/desktop/k8s-use-cases/istio+cross-acc-ecr (main)
 $ kubectl get deployments
 NAME     READY   UP-TO-DATE   AVAILABLE   AGE
 db       1/1     1            1           9m23s
@@ -507,7 +507,7 @@ result   2/2     2            2           9m22s
 vote     2/2     1            2           9m22s
 worker   2/2     2            2           9m22s
 
-Minfy@AbhinavBisht MINGW64 ~/OneDrive - MINFY TECHNOLOGIES PRIVATE LIMITED/desktop/k8s-use-cases/istio+cross-acc-ecr (main)
+AbhinavBisht MINGW64 ~/OneDrive/desktop/k8s-use-cases/istio+cross-acc-ecr (main)
 $ kubectl get pods -o wide
 NAME                      READY   STATUS     RESTARTS     AGE     IP               NODE                                           NOMINATED NODE   READINESS GATES
 db-84c78cd8c9-vh7gt       2/2     Running    0            79s     172.31.137.20    ip-172-31-142-47.ap-south-1.compute.internal   <none>           <none>
@@ -521,7 +521,7 @@ vote-76869c5b6-6mnsh      0/2     Init:0/1   0            80s     <none>        
 worker-59b9d85bff-khn2w   1/2     Error      1 (7s ago)   80s     172.31.133.197   ip-172-31-142-47.ap-south-1.compute.internal   <none>           <none>
 worker-59b9d85bff-wrch4   2/2     Running    1 (7s ago)   40s     172.31.156.228   ip-172-31-150-90.ap-south-1.compute.internal   <none>           <none>
 
-Minfy@AbhinavBisht MINGW64 ~/OneDrive - MINFY TECHNOLOGIES PRIVATE LIMITED/desktop/k8s-use-cases/istio+cross-acc-ecr (main)
+AbhinavBisht MINGW64 ~/OneDrive/desktop/k8s-use-cases/istio+cross-acc-ecr (main)
 $ kubectl get pods -o wide
 NAME                      READY   STATUS     RESTARTS      AGE   IP               NODE                                           NOMINATED NODE   READINESS GATES
 db-84c78cd8c9-vh7gt       2/2     Running    0             94s   172.31.137.20    ip-172-31-142-47.ap-south-1.compute.internal   <none>           <none>
@@ -535,7 +535,7 @@ vote-76869c5b6-6mnsh      0/2     Init:0/1   0             95s   <none>         
 worker-59b9d85bff-khn2w   2/2     Running    2 (19s ago)   95s   172.31.133.197   ip-172-31-142-47.ap-south-1.compute.internal   <none>           <none>
 worker-59b9d85bff-wrch4   2/2     Running    1 (22s ago)   55s   172.31.156.228   ip-172-31-150-90.ap-south-1.compute.internal   <none>           <none>
 
-Minfy@AbhinavBisht MINGW64 ~/OneDrive - MINFY TECHNOLOGIES PRIVATE LIMITED/desktop/k8s-use-cases/istio+cross-acc-ecr (main)
+AbhinavBisht MINGW64 ~/OneDrive/desktop/k8s-use-cases/istio+cross-acc-ecr (main)
 $ kubectl get pods -o wide
 NAME                      READY   STATUS    RESTARTS        AGE     IP               NODE                                           NOMINATED NODE   READINESS GATES
 db-84c78cd8c9-vh7gt       2/2     Running   0               4m51s   172.31.137.20    ip-172-31-142-47.ap-south-1.compute.internal   <none>           <none>
@@ -547,7 +547,7 @@ vote-76869c5b6-6mnsh      2/2     Running   0               4m52s   172.31.129.9
 worker-59b9d85bff-khn2w   2/2     Running   2 (3m36s ago)   4m52s   172.31.133.197   ip-172-31-142-47.ap-south-1.compute.internal   <none>           <none>
 worker-59b9d85bff-wrch4   2/2     Running   1 (3m39s ago)   4m12s   172.31.156.228   ip-172-31-150-90.ap-south-1.compute.internal   <none>           <none>
 
-Minfy@AbhinavBisht MINGW64 ~/OneDrive - MINFY TECHNOLOGIES PRIVATE LIMITED/desktop/k8s-use-cases/istio+cross-acc-ecr (main)
+AbhinavBisht MINGW64 ~/OneDrive/desktop/k8s-use-cases/istio+cross-acc-ecr (main)
 $ kubectl get namespaces
 NAME              STATUS   AGE
 default           Active   5h17m
@@ -556,16 +556,16 @@ kube-node-lease   Active   5h17m
 kube-public       Active   5h17m
 kube-system       Active   5h17m
 
-Minfy@AbhinavBisht MINGW64 ~/OneDrive - MINFY TECHNOLOGIES PRIVATE LIMITED/desktop/k8s-use-cases/istio+cross-acc-ecr (main)
+AbhinavBisht MINGW64 ~/OneDrive/desktop/k8s-use-cases/istio+cross-acc-ecr (main)
 $ vim gateway.yml
 
-Minfy@AbhinavBisht MINGW64 ~/OneDrive - MINFY TECHNOLOGIES PRIVATE LIMITED/desktop/k8s-use-cases/istio+cross-acc-ecr (main)
+AbhinavBisht MINGW64 ~/OneDrive/desktop/k8s-use-cases/istio+cross-acc-ecr (main)
 $ vim vote-virtualservice.yml
 
-Minfy@AbhinavBisht MINGW64 ~/OneDrive - MINFY TECHNOLOGIES PRIVATE LIMITED/desktop/k8s-use-cases/istio+cross-acc-ecr (main)
+AbhinavBisht MINGW64 ~/OneDrive/desktop/k8s-use-cases/istio+cross-acc-ecr (main)
 $ vim result-virtualservice.yml
 
-Minfy@AbhinavBisht MINGW64 ~/OneDrive - MINFY TECHNOLOGIES PRIVATE LIMITED/desktop/k8s-use-cases/istio+cross-acc-ecr (main)
+AbhinavBisht MINGW64 ~/OneDrive/desktop/k8s-use-cases/istio+cross-acc-ecr (main)
 $ kubectl apply -f gateway.yml
 kubectl apply -f vote-virtualservice.yml
 kubectl apply -f result-virtualservice.yml
@@ -573,7 +573,7 @@ gateway.networking.istio.io/voting-gateway created
 virtualservice.networking.istio.io/vote-vs created
 virtualservice.networking.istio.io/result-vs created
 
-Minfy@AbhinavBisht MINGW64 ~/OneDrive - MINFY TECHNOLOGIES PRIVATE LIMITED/desktop/k8s-use-cases/istio+cross-acc-ecr (main)
+AbhinavBisht MINGW64 ~/OneDrive/desktop/k8s-use-cases/istio+cross-acc-ecr (main)
 $ kubectl get gateway
 kubectl get virtualservice
 NAME             AGE
@@ -582,13 +582,13 @@ NAME        GATEWAYS             HOSTS   AGE
 result-vs   ["voting-gateway"]   ["*"]   24s
 vote-vs     ["voting-gateway"]   ["*"]   26s
 
-Minfy@AbhinavBisht MINGW64 ~/OneDrive - MINFY TECHNOLOGIES PRIVATE LIMITED/desktop/k8s-use-cases/istio+cross-acc-ecr (main)
+AbhinavBisht MINGW64 ~/OneDrive/desktop/k8s-use-cases/istio+cross-acc-ecr (main)
 $ kubectl get svc istio-ingressgateway -n istio-system
 NAME                   TYPE           CLUSTER-IP    EXTERNAL-IP                                                                PORT(S)
                                 AGE
 istio-ingressgateway   LoadBalancer   10.100.9.13   a1131e5cd8ec9411a98c11749be6db94-1325492322.ap-south-1.elb.amazonaws.com   15021:32433/TCP,80:32538/TCP,443:32073/TCP,31400:31332/TCP,15443:31846/TCP   129m
 
-Minfy@AbhinavBisht MINGW64 ~/OneDrive - MINFY TECHNOLOGIES PRIVATE LIMITED/desktop/k8s-use-cases/istio+cross-acc-ecr (main)
+AbhinavBisht MINGW64 ~/OneDrive/desktop/k8s-use-cases/istio+cross-acc-ecr (main)
 $ kubectl patch svc istio-ingressgateway -n istio-system \
   --type=json \
   -p='[{"op":"add","path":"/spec/ports/-","value":{"name":"http-result","port":81,"targetPort":8081,"protocol":"TCP"}}]'

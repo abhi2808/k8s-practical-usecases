@@ -1,4 +1,4 @@
-# obeservabiity open-source prom-grafana
+# Observability - Open-Source Prom-Grafana
 
 
 ## What our helm does
@@ -7,59 +7,59 @@ The kube-prometheus-stack Helm chart deploys Prometheus, Grafana, and all requir
 
 Node-level metrics such as CPU, memory, filesystem, and network usage are collected using node-exporter, which is deployed as a DaemonSet. This ensures that one exporter pod runs on every node. The exporter listens on an internal port (typically 9100) that is not exposed outside the cluster. Prometheus accesses this port using Kubernetes service discovery and the cluster network, meaning no node ports or security group changes are required.
 
-Container and pod-level metrics are collected from the kubelet’s built-in cAdvisor endpoint, which runs on each node. The chart configures Prometheus with the correct authentication and TLS settings to securely scrape these endpoints over the cluster network. Access to kubelet metrics is governed by RBAC rules created by the chart, ensuring Prometheus has read-only access to metrics and no broader permissions.
+Container and pod-level metrics are collected from the kubelet's built-in cAdvisor endpoint, which runs on each node. The chart configures Prometheus with the correct authentication and TLS settings to securely scrape these endpoints over the cluster network. Access to kubelet metrics is governed by RBAC rules created by the chart, ensuring Prometheus has read-only access to metrics and no broader permissions.
 
 Kubernetes object state (Deployments, Pods, Services, ReplicaSets, etc.) is exposed through kube-state-metrics, which runs as a standard Deployment. This component does not interact with nodes directly; instead, it reads object state from the Kubernetes API server. Prometheus scrapes these metrics via an internal ClusterIP service, again without exposing any external ports.
 
-Grafana itself is deployed as a Deployment with a ClusterIP Service by default. In your case, changing the service type to LoadBalancer instructs Kubernetes to provision an AWS load balancer and expose only port 80 publicly. Internally, this maps to Grafana’s container port (3000). No other monitoring component is exposed externally, and no additional ports are opened on worker nodes.
+Grafana itself is deployed as a Deployment with a ClusterIP Service by default. In your case, changing the service type to LoadBalancer instructs Kubernetes to provision an AWS load balancer and expose only port 80 publicly. Internally, this maps to Grafana's container port (3000). No other monitoring component is exposed externally, and no additional ports are opened on worker nodes.
 
 Crucially, the Helm chart does not require you to manually open ports on EC2 instances, configure iptables, or adjust security groups for metric collection. All communication between Prometheus and exporters happens over the Kubernetes overlay network, and AWS security groups only need to allow traffic from the load balancer to the nodes for Grafana access. This design keeps the cluster secure while still providing full observability.
 
 In summary, the Helm chart encapsulates all required networking, port wiring, and access control for observability. The only conscious exposure decision you make is whether Grafana should remain internal or be exposed via a LoadBalancer. Everything else remains private, authenticated, and managed by Kubernetes itself.
 
 
-# finally while managing your dashboards:
+# Finally while managing your dashboards:
 
-## ✅ DOs (Recommended & Safe)
+## DOs (Recommended & Safe)
 
-### 1️⃣ Dashboard creation & provisioning
+### 1. Dashboard creation & provisioning
 - Do write your own Grafana dashboard JSON (from scratch or by exporting an existing one).
 - Do store the dashboard JSON in a ConfigMap in the `monitoring` namespace.
 - Do label the ConfigMap with `grafana_dashboard=1`.
 - Do apply the ConfigMap and let Grafana auto-provision the dashboard.
 
-### 2️⃣ Dashboard customization
+### 2. Dashboard customization
 - Do modify, delete, or redesign panels in dashboards you own.
 - Do create simplified, app-only dashboards (for example, only `brdep` metrics).
 
-### 3️⃣ Access control & visibility
+### 3. Access control & visibility
 - Do organize dashboards using Grafana folders.
 - Do restrict user access using Grafana RBAC so users see only selected dashboards.
 
-### 4️⃣ Architecture & exposure
+### 4. Architecture & exposure
 - Do expose Grafana via a separate LoadBalancer.
 - Do keep Prometheus and node metrics private inside the cluster.
 
 ---
 
-## ❌ DON’Ts (Not Recommended / Unsafe)
+## DON'Ts (Not Recommended / Unsafe)
 
-### 1️⃣ Helm-managed dashboards
-- Don’t edit Helm-generated dashboard ConfigMaps (`monitoring-kube-prometheus-*`).
-- Don’t delete default dashboards directly.
-- Don’t rely on UI edits for Helm-provisioned dashboards.
-- Don’t modify where Helm dashboards source their JSON.
+### 1. Helm-managed dashboards
+- Don't edit Helm-generated dashboard ConfigMaps (`monitoring-kube-prometheus-*`).
+- Don't delete default dashboards directly.
+- Don't rely on UI edits for Helm-provisioned dashboards.
+- Don't modify where Helm dashboards source their JSON.
 
-### 2️⃣ Dashboard JSON constraints
-- Don’t use panel JSON alone.
-- Don’t provision anything other than full dashboard JSON.
+### 2. Dashboard JSON constraints
+- Don't use panel JSON alone.
+- Don't provision anything other than full dashboard JSON.
 
-### 3️⃣ Access assumptions
-- Don’t assume dashboards control visibility.
-- Don’t expose cluster-level dashboards to users who should not see them (use RBAC).
+### 3. Access assumptions
+- Don't assume dashboards control visibility.
+- Don't expose cluster-level dashboards to users who should not see them (use RBAC).
 
 
-# if you want to implement alert notifications:
+# If you want to implement alert notifications:
 
 1) Create alertmanager-values.yaml
 2) Run helm upgrade
@@ -75,15 +75,15 @@ Helm:
 
 setup:
 
-Minfy@AbhinavBisht MINGW64 ~/OneDrive - MINFY TECHNOLOGIES PRIVATE LIMITED/desktop/NHA-ABDM/use-cases/app-deployment-eks
+AbhinavBisht MINGW64 ~/OneDrive/desktop/use-cases/app-deployment-eks
 $ helm version
 version.BuildInfo{Version:"v4.1.0", GitCommit:"4553a0a96e5205595079b6757236cc6f969ed1b9", GitTreeState:"clean", GoVersion:"go1.25.6", KubeClientVersion:"v1.35"}
 
-Minfy@AbhinavBisht MINGW64 ~/OneDrive - MINFY TECHNOLOGIES PRIVATE LIMITED/desktop/NHA-ABDM/use-cases/app-deployment-eks
+AbhinavBisht MINGW64 ~/OneDrive/desktop/use-cases/app-deployment-eks
 $ kubectl create namespace monitoring
 namespace/monitoring created
 
-Minfy@AbhinavBisht MINGW64 ~/OneDrive - MINFY TECHNOLOGIES PRIVATE LIMITED/desktop/NHA-ABDM/use-cases/app-deployment-eks
+AbhinavBisht MINGW64 ~/OneDrive/desktop/use-cases/app-deployment-eks
 $ kubectl get namespaces
 NAME              STATUS   AGE
 default           Active   26h
@@ -92,15 +92,15 @@ kube-public       Active   26h
 kube-system       Active   26h
 monitoring        Active   63s
 
-Minfy@AbhinavBisht MINGW64 ~/OneDrive - MINFY TECHNOLOGIES PRIVATE LIMITED/desktop/NHA-ABDM/use-cases/app-deployment-eks
+AbhinavBisht MINGW64 ~/OneDrive/desktop/use-cases/app-deployment-eks
 $ helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 helm repo update
 "prometheus-community" has been added to your repositories
 Hang tight while we grab the latest from your chart repositories...
 ...Successfully got an update from the "prometheus-community" chart repository
-Update Complete. ⎈Happy Helming!⎈
+Update Complete. Happy Helming!
 
-Minfy@AbhinavBisht MINGW64 ~/OneDrive - MINFY TECHNOLOGIES PRIVATE LIMITED/desktop/NHA-ABDM/use-cases/app-deployment-eks
+AbhinavBisht MINGW64 ~/OneDrive/desktop/use-cases/app-deployment-eks
 $ helm install monitoring prometheus-community/kube-prometheus-stack \
   -n monitoring
 NAME: monitoring
@@ -113,21 +113,21 @@ NOTES:
 kube-prometheus-stack has been installed. Check its status by running:
   kubectl --namespace monitoring get pods -l "release=monitoring"
 
-Minfy@AbhinavBisht MINGW64 ~/OneDrive - MINFY TECHNOLOGIES PRIVATE LIMITED/desktop/NHA-ABDM/use-cases/app-deployment-eks
+AbhinavBisht MINGW64 ~/OneDrive/desktop/use-cases/app-deployment-eks
 $ kubectl apply -f monitoring-grafana-svc.yaml
 error: the path "monitoring-grafana-svc.yaml" does not exist
 
-Minfy@AbhinavBisht MINGW64 ~/OneDrive - MINFY TECHNOLOGIES PRIVATE LIMITED/desktop/NHA-ABDM/use-cases/app-deployment-eks
-$ kubectl apply -f C:\\Users\\Minfy\\AppData\\Local\\Temp\\kubectl.exe-edit-3503235381.yaml
+AbhinavBisht MINGW64 ~/OneDrive/desktop/use-cases/app-deployment-eks
+$ kubectl apply -f C:\\Users\\AbhinavBisht\\AppData\\Local\\Temp\\kubectl.exe-edit-3503235381.yaml
 Warning: resource services/monitoring-grafana is missing the kubectl.kubernetes.io/last-applied-configuration annotation which is required by kubectl apply. kubectl apply should only be used on resources created declaratively by either kubectl create --save-config or kubectl apply. The missing annotation will be patched automatically.
 service/monitoring-grafana configured
 
-Minfy@AbhinavBisht MINGW64 ~/OneDrive - MINFY TECHNOLOGIES PRIVATE LIMITED/desktop/NHA-ABDM/use-cases/app-deployment-eks
+AbhinavBisht MINGW64 ~/OneDrive/desktop/use-cases/app-deployment-eks
 $ kubectl get services -n
 error: flag needs an argument: 'n' in -n
 See 'kubectl get --help' for usage.
 
-Minfy@AbhinavBisht MINGW64 ~/OneDrive - MINFY TECHNOLOGIES PRIVATE LIMITED/desktop/NHA-ABDM/use-cases/app-deployment-eks
+AbhinavBisht MINGW64 ~/OneDrive/desktop/use-cases/app-deployment-eks
 $ kubectl get services -n monitoring
 NAME                                      TYPE           CLUSTER-IP       EXTERNAL-IP                                                               PORT(S)
      AGE
@@ -145,7 +145,7 @@ monitoring-prometheus-node-exporter       ClusterIP      10.100.217.182   <none>
 prometheus-operated                       ClusterIP      None             <none>                                                                    9090/TCP
      15m
 
-Minfy@AbhinavBisht MINGW64 ~/OneDrive - MINFY TECHNOLOGIES PRIVATE LIMITED/desktop/NHA-ABDM/use-cases/app-deployment-eks
+AbhinavBisht MINGW64 ~/OneDrive/desktop/use-cases/app-deployment-eks
 $ kubectl describe service monitoring-grafana -n monitoring
 Name:                     monitoring-grafana
 Namespace:                monitoring
@@ -177,7 +177,7 @@ Events:
   Normal  EnsuringLoadBalancer  3m56s  service-controller  Ensuring load balancer
   Normal  EnsuredLoadBalancer   3m53s  service-controller  Ensured load balancer
 
-Minfy@AbhinavBisht MINGW64 ~/OneDrive - MINFY TECHNOLOGIES PRIVATE LIMITED/desktop/NHA-ABDM/use-cases/app-deployment-eks
+AbhinavBisht MINGW64 ~/OneDrive/desktop/use-cases/app-deployment-eks
 $ kubectl get secret monitoring-grafana -n monitoring \
   -o jsonpath="{.data.admin-password}" | base64 --decode
 do0aLTq5PIde............

@@ -52,15 +52,15 @@ in account-b instance:
 
 make sure you have authentication modes other than API, set up in your k8s cluster!!
 
-Minfy@AbhinavBisht MINGW64 ~
+AbhinavBisht MINGW64 ~
 $ aws sts get-caller-identity
 {
     "UserId": "AIDASVLKCMK2R44QTKQLP",
     "Account": "183295435445",
-    "Arn": "arn:aws:iam::183295435445:user/divyasree.m@minfytech.com"
+    "Arn": "arn:aws:iam::183295435445:user/user@example.com"
 }
 
-Minfy@AbhinavBisht MINGW64 ~
+AbhinavBisht MINGW64 ~
 $ aws eks describe-cluster \
   --name prac-eks-abhi \
   --region ap-south-1 \
@@ -68,7 +68,7 @@ $ aws eks describe-cluster \
 "API"
 
 
-Minfy@AbhinavBisht MINGW64 ~
+AbhinavBisht MINGW64 ~
 $ aws eks create-access-entry \
   --cluster-name prac-eks-abhi \
   --principal-arn arn:aws:iam::183295435445:role/EKS-CrossAccount-Access-Role \
@@ -89,7 +89,7 @@ $ aws eks create-access-entry \
 }
 
 
-Minfy@AbhinavBisht MINGW64 ~
+AbhinavBisht MINGW64 ~
 $ aws eks associate-access-policy \
   --cluster-name prac-eks-abhi \
   --principal-arn arn:aws:iam::183295435445:role/EKS-CrossAccount-Access-Role \
@@ -111,7 +111,7 @@ $ aws eks associate-access-policy \
 }
 
 
-Minfy@AbhinavBisht MINGW64 ~
+AbhinavBisht MINGW64 ~
 $ aws eks list-access-entries \
   --cluster-name prac-eks-abhi \
   --region ap-south-1
@@ -120,13 +120,7 @@ $ aws eks list-access-entries \
         "arn:aws:iam::183295435445:role/EKS-CrossAccount-Access-Role",
         "arn:aws:iam::183295435445:role/aws-service-role/eks.amazonaws.com/AWSServiceRoleForAmazonEKS",
         "arn:aws:iam::183295435445:role/eksctl-prac-eks-abhi-nodegroup-ubu-NodeInstanceRole-7WFIgW9P4vyy",
-        "arn:aws:iam::183295435445:user/divyasree.m@minfytech.com",
-        "arn:aws:iam::183295435445:user/priyesh.rai@minfytech.com"
+        "arn:aws:iam::183295435445:user/user@example.com",
+        "arn:aws:iam::183295435445:user/user2@example.com"
     ]
 }
-
-
-
-
-
-

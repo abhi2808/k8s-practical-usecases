@@ -74,7 +74,7 @@ aws ec2 create-subnet \
 
 ## Step 3: Find the Public Route Table
 
-> ⚠️ **Nuance:** The route table named `public-rt` did NOT have an IGW route. The actual public route table was an unnamed one. Always verify by checking which RT has an `igw-` gateway.
+> **Nuance:** The route table named `public-rt` did NOT have an IGW route. The actual public route table was an unnamed one. Always verify by checking which RT has an `igw-` gateway.
 
 ```bash
 aws ec2 describe-route-tables \
@@ -157,7 +157,7 @@ aws ec2 create-tags \
 
 ## Step 7: Find Ubuntu EKS AMI
 
-> ⚠️ **Nuance:** SSM parameter paths for Ubuntu EKS AMIs are not browsable and the exact path varies. Use `describe-images` with Canonical's account ID instead.
+> **Nuance:** SSM parameter paths for Ubuntu EKS AMIs are not browsable and the exact path varies. Use `describe-images` with Canonical's account ID instead.
 
 ```bash
 aws ec2 describe-images \
@@ -176,9 +176,9 @@ aws ec2 describe-images \
 
 ## Step 8: Create Launch Template
 
-> ⚠️ **Nuance:** AWS CLI expects PascalCase keys (`ImageId`, not `imageId`) in `--launch-template-data` JSON. camelCase will fail with `Unknown parameter` errors.
+> **Nuance:** AWS CLI expects PascalCase keys (`ImageId`, not `imageId`) in `--launch-template-data` JSON. camelCase will fail with `Unknown parameter` errors.
 
-> ⚠️ **Nuance:** Set `HttpPutResponseHopLimit: 2` in MetadataOptions — required for IMDSv2 to work inside containers on the node.
+> **Nuance:** Set `HttpPutResponseHopLimit: 2` in MetadataOptions — required for IMDSv2 to work inside containers on the node.
 
 ```bash
 USERDATA=$(printf '#!/bin/bash\nset -ex\n/etc/eks/bootstrap.sh abhinav-istio-mesh' | base64 -w 0)
@@ -221,7 +221,7 @@ aws ec2 create-launch-template-version \
 
 ### Fix FIPS Error on Ubuntu 22.04 (Version 3)
 
-> ⚠️ **Nuance:** Ubuntu 22.04 doesn't have the `crypto/fips_enabled` kernel module that the EKS bootstrap script checks for. This causes the bootstrap to exit with an error. Workaround: pre-create the file before calling bootstrap.
+> **Nuance:** Ubuntu 22.04 doesn't have the `crypto/fips_enabled` kernel module that the EKS bootstrap script checks for. This causes the bootstrap to exit with an error. Workaround: pre-create the file before calling bootstrap.
 
 ```bash
 USERDATA=$(cat <<'EOF' | base64 -w 0
@@ -248,9 +248,9 @@ aws ec2 create-launch-template-version \
 
 ## Step 9: Create EKS Cluster (Control Plane Only)
 
-> ⚠️ **Nuance:** `eksctl create cluster` does not support `--vpc-id` as a standalone flag. You must use a config file for existing VPC setups.
+> **Nuance:** `eksctl create cluster` does not support `--vpc-id` as a standalone flag. You must use a config file for existing VPC setups.
 
-> ⚠️ **Nuance:** CloudWatch logging is off by default — no need to explicitly disable it.
+> **Nuance:** CloudWatch logging is off by default — no need to explicitly disable it.
 
 ```bash
 cat <<EOF > cluster-config.yaml
@@ -287,7 +287,7 @@ eksctl create cluster -f cluster-config.yaml
 
 ## Step 10: Create IAM Node Role
 
-> ⚠️ **Nuance:** When using `aws eks create-nodegroup` directly (instead of eksctl), you must pre-create the IAM node role manually. eksctl would have done this automatically.
+> **Nuance:** When using `aws eks create-nodegroup` directly (instead of eksctl), you must pre-create the IAM node role manually. eksctl would have done this automatically.
 
 ```bash
 # Create the role
@@ -317,9 +317,9 @@ aws iam attach-role-policy --role-name eksNodeRole \
 
 ## Step 11: Create Managed Node Group via AWS CLI
 
-> ⚠️ **Nuance:** Do NOT use `eksctl create nodegroup` with Ubuntu — eksctl ignores the launch template AMI and defaults to AL2023. Using `aws eks create-nodegroup` directly respects the launch template fully.
+> **Nuance:** Do NOT use `eksctl create nodegroup` with Ubuntu — eksctl ignores the launch template AMI and defaults to AL2023. Using `aws eks create-nodegroup` directly respects the launch template fully.
 
-> ⚠️ **Nuance:** `amiFamily: Ubuntu2204` in eksctl config does NOT work for k8s 1.33 — SSM path doesn't exist and eksctl throws `ParameterNotFound`.
+> **Nuance:** `amiFamily: Ubuntu2204` in eksctl config does NOT work for k8s 1.33 — SSM path doesn't exist and eksctl throws `ParameterNotFound`.
 
 ```bash
 aws eks create-nodegroup \
@@ -336,11 +336,11 @@ aws eks create-nodegroup \
 
 ## Step 12: Set Up NAT Gateway
 
-> ⚠️ **Nuance:** Nodes in private subnets need outbound internet to pull images from `public.ecr.aws` (pause container, etc.). VPC endpoints alone are NOT enough — `public.ecr.aws` is a public endpoint and requires NAT or IGW.
+> **Nuance:** Nodes in private subnets need outbound internet to pull images from `public.ecr.aws` (pause container, etc.). VPC endpoints alone are NOT enough — `public.ecr.aws` is a public endpoint and requires NAT or IGW.
 
-> ⚠️ **Nuance:** If nodes boot before NAT is ready, they will fail to join. You must delete and recreate the nodegroup after fixing NAT — existing failed instances won't retry.
+> **Nuance:** If nodes boot before NAT is ready, they will fail to join. You must delete and recreate the nodegroup after fixing NAT — existing failed instances won't retry.
 
-> ⚠️ **Nuance:** If a `0.0.0.0/0` route already exists (blackhole), use `replace-route` not `create-route`.
+> **Nuance:** If a `0.0.0.0/0` route already exists (blackhole), use `replace-route` not `create-route`.
 
 ```bash
 # Allocate Elastic IP
@@ -365,9 +365,9 @@ aws ec2 replace-route \
 
 ## Step 13: Set Up VPC Endpoints
 
-> ⚠️ **Nuance:** Even with NAT, VPC endpoints for ECR and STS reduce data transfer costs and keep traffic within AWS network.
+> **Nuance:** Even with NAT, VPC endpoints for ECR and STS reduce data transfer costs and keep traffic within AWS network.
 
-> ⚠️ **Nuance:** You also need the `eks` endpoint so nodes can register with the control plane — without it nodes cannot join the cluster even if NAT is working.
+> **Nuance:** You also need the `eks` endpoint so nodes can register with the control plane — without it nodes cannot join the cluster even if NAT is working.
 
 ```bash
 # S3 Gateway Endpoint (free)
