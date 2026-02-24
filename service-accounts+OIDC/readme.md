@@ -1,3 +1,4 @@
+```bash
 AbhinavBisht MINGW64 ~
 $ OIDC_PROVIDER="oidc.eks.ap-south-1.amazonaws.com/id/6DC71F5E1888E9ECF73E19B179E321A5"
 AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
@@ -312,7 +313,7 @@ eksctl utils associate-iam-oidc-provider \
   --cluster prac-eks-abhi \
   --region ap-south-1 \
   --approve
-
+```
 
 
 # How IRSA works

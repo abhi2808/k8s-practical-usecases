@@ -56,6 +56,8 @@ It is also worth noting that the version number (e.g. `v1.30.14`) has three part
 
 # implementation
 
+```bash
+
 AbhinavBisht MINGW64 ~/OneDrive/desktop/k8s-use-cases/istio+cross-acc-ecr (main)
 $ aws eks list-nodegroups \
   --cluster-name abhinav-istio-mesh \
@@ -592,3 +594,5 @@ ip-172-31-144-94.ap-south-1.compute.internal    Ready    <none>   9m37s   v1.31.
 
 AbhinavBisht MINGW64 ~/OneDrive/desktop/k8s-use-cases/istio+cross-acc-ecr (main)
 $
+
+```

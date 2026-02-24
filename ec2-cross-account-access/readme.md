@@ -52,6 +52,9 @@ in account-b instance:
 
 make sure you have authentication modes other than API, set up in your k8s cluster!!
 
+
+```bash
+
 AbhinavBisht MINGW64 ~
 $ aws sts get-caller-identity
 {
@@ -124,3 +127,5 @@ $ aws eks list-access-entries \
         "arn:aws:iam::183295435445:user/user2@example.com"
     ]
 }
+
+```

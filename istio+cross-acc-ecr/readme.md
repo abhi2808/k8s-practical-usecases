@@ -141,6 +141,9 @@ App Pod :80
 
 ## CLI implementation
 
+
+```bash
+
 AbhinavBisht MINGW64 ~/OneDrive/desktop/k8s-use-cases/istio+cross-acc-ecr (main)
 $ # Download Istio 1.24.3 (latest stable)
 curl -L https://github.com/istio/istio/releases/download/1.24.3/istio-1.24.3-win.zip -o istio.zip
@@ -593,3 +596,5 @@ $ kubectl patch svc istio-ingressgateway -n istio-system \
   --type=json \
   -p='[{"op":"add","path":"/spec/ports/-","value":{"name":"http-result","port":81,"targetPort":8081,"protocol":"TCP"}}]'
 service/istio-ingressgateway patched
+
+```
