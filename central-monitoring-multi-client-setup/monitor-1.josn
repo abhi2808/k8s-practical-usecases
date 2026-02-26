@@ -1,0 +1,233 @@
+{
+  "__inputs": [],
+  "__requires": [],
+  "annotations": { "list": [] },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": null,
+  "links": [],
+  "panels": [
+    {
+      "type": "table",
+      "title": "🏠 Clients Overview",
+      "gridPos": { "h": 14, "w": 24, "x": 0, "y": 0 },
+      "options": {
+        "cellHeight": "md",
+        "footer": { "countRows": false, "fields": "", "reducer": ["sum"], "show": false },
+        "showHeader": true,
+        "sortBy": [{ "desc": false, "displayName": "Client" }]
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "left",
+            "cellOptions": { "type": "auto" },
+            "filterable": false,
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "red", "value": 80 }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": { "id": "byName", "options": "Client" },
+            "properties": [
+              { "id": "custom.width", "value": 200 },
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "targetBlank": false,
+                    "title": "Open ${__value.text} details",
+                    "url": "/d/monitor-2/monitor-2?var-client=${__value.text}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": { "id": "byName", "options": "Health" },
+            "properties": [
+              { "id": "custom.width", "value": 120 },
+              { "id": "custom.cellOptions", "value": { "type": "color-background", "mode": "gradient" } },
+              {
+                "id": "mappings",
+                "value": [
+                  { "type": "value", "options": { "1": { "text": "● Healthy", "color": "green", "index": 0 } } },
+                  { "type": "value", "options": { "0": { "text": "● Unhealthy", "color": "red", "index": 1 } } }
+                ]
+              },
+              { "id": "thresholds", "value": { "mode": "absolute", "steps": [{ "color": "red", "value": null }, { "color": "green", "value": 1 }] } }
+            ]
+          },
+          {
+            "matcher": { "id": "byName", "options": "CPU Usage %" },
+            "properties": [
+              { "id": "custom.width", "value": 150 },
+              { "id": "unit", "value": "percent" },
+              { "id": "decimals", "value": 1 },
+              { "id": "custom.cellOptions", "value": { "type": "gauge", "mode": "gradient" } },
+              { "id": "thresholds", "value": { "mode": "absolute", "steps": [{ "color": "green", "value": null }, { "color": "yellow", "value": 60 }, { "color": "red", "value": 85 }] } },
+              { "id": "min", "value": 0 },
+              { "id": "max", "value": 100 }
+            ]
+          },
+          {
+            "matcher": { "id": "byName", "options": "Memory Usage %" },
+            "properties": [
+              { "id": "custom.width", "value": 150 },
+              { "id": "unit", "value": "percent" },
+              { "id": "decimals", "value": 1 },
+              { "id": "custom.cellOptions", "value": { "type": "gauge", "mode": "gradient" } },
+              { "id": "thresholds", "value": { "mode": "absolute", "steps": [{ "color": "green", "value": null }, { "color": "yellow", "value": 70 }, { "color": "red", "value": 90 }] } },
+              { "id": "min", "value": 0 },
+              { "id": "max", "value": 100 }
+            ]
+          },
+          {
+            "matcher": { "id": "byName", "options": "Nodes" },
+            "properties": [{ "id": "custom.width", "value": 80 }]
+          },
+          {
+            "matcher": { "id": "byName", "options": "Pods Ready" },
+            "properties": [
+              { "id": "custom.width", "value": 110 },
+              { "id": "custom.cellOptions", "value": { "type": "color-text" } },
+              { "id": "thresholds", "value": { "mode": "absolute", "steps": [{ "color": "green", "value": null }] } }
+            ]
+          },
+          {
+            "matcher": { "id": "byName", "options": "Pods Not Ready" },
+            "properties": [
+              { "id": "custom.width", "value": 130 },
+              { "id": "custom.cellOptions", "value": { "type": "color-text" } },
+              { "id": "thresholds", "value": { "mode": "absolute", "steps": [{ "color": "green", "value": null }, { "color": "red", "value": 1 }] } },
+              {
+                "id": "mappings",
+                "value": [
+                  { "type": "value", "options": { "0": { "text": "0", "color": "green", "index": 0 } } }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "expr": "min by (clientName) (up{job=~\".*kube.*|.*node.*\"})",
+OBOB          "format": "table",
+OB          "instant": true,
+OB          "legendFormat": "__auto",
+          "refId": "Health"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+OB          "expr": "count by (clientName) (kube_node_info)",
+OBOB          "format": "table",
+OB          "instant": true,
+OBOB          "legendFormat": "__auto",
+OBOB          "refId": "Nodes"
+        },
+OB        {
+OBOB          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+OBOB          "expr": "count by (clientName) (kube_pod_status_phase{phase=\"Running\"} == 1)",
+OB          "format": "table",
+OB          "instant": true,
+          "legendFormat": "__auto",
+OBOB          "refId": "PodsReady"
+OB        },
+OB        {
+OBOBOB          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "expr": "count by (clientName) (kube_pod_status_phase{phase!=\"Running\", phase!=\"Succeeded\"} == 1) or (group by (clientName) (kube_node_info) * 0)",
+OBOBOB          "format": "table",
+          "instant": true,
+OBOB          "legendFormat": "__auto",
+          "refId": "PodsNotReady"
+OBOBOB        },
+OB        {
+          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+OB          "expr": "sum by (clientName) (rate(node_cpu_seconds_total{mode!=\"idle\"}[5m])) / sum by (clientName) (rate(node_cpu_seconds_total[5m])) * 100",
+          "format": "table",
+OBOB          "instant": true,
+          "legendFormat": "__auto",
+          "refId": "CPU"
+OB        },
+        {
+OB          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "expr": "sum by (clientName) (node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) / sum by (clientName) (node_memory_MemTotal_bytes) * 100",
+          "format": "table",
+          "instant": true,
+          "legendFormat": "__auto",
+OB          "refId": "Memory"
+        }
+      ],
+      "transformations": [
+        { "id": "joinByField", "options": { "byField": "clientName", "mode": "outer" } },
+        {
+          "id": "filterFieldsByName",
+          "options": {
+            "include": {
+              "names": ["clientName", "Value #Health", "Value #Nodes", "Value #PodsReady", "Value #PodsNotReady", "Value #CPU", "Value #Memory"]
+            }
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "renameByName": {
+              "clientName": "Client",
+              "Value #Health": "Health",
+              "Value #Nodes": "Nodes",
+              "Value #PodsReady": "Pods Ready",
+              "Value #PodsNotReady": "Pods Not Ready",
+              "Value #CPU": "CPU Usage %",
+              "Value #Memory": "Memory Usage %"
+            },
+            "indexByName": {
+              "clientName": 0,
+              "Value #Health": 1,
+              "Value #Nodes": 2,
+              "Value #PodsReady": 3,
+              "Value #PodsNotReady": 4,
+              "Value #CPU": 5,
+              "Value #Memory": 6
+            }
+          }
+        }
+      ],
+      "datasource": { "type": "prometheus", "uid": "${datasource}" }
+    }
+  ],
+  "refresh": "30s",
+  "schemaVersion": 38,
+  "tags": ["monitoring", "overview"],
+  "templating": {
+    "list": [
+      {
+        "current": {},
+        "hide": 0,
+        "includeAll": false,
+        "name": "datasource",
+        "options": [],
+        "query": "prometheus",
+        "refresh": 1,
+        "type": "datasource",
+        "label": "Data Source"
+      }
+    ]
+  },
+  "time": { "from": "now-1h", "to": "now" },
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "Monitor-1",
+  "uid": "monitor-1",
+  "version": 1
+}

@@ -1,0 +1,25 @@
+prometheus:
+  prometheusSpec:
+    externalLabels:
+      clientName: client-2        # <-- change to client-2 for second cluster
+
+    remoteWrite:
+      - url: "http://65.0.81.49:9090/api/v1/write"
+        # If central Prometheus is in same VPC, use private IP (preferred)
+        # Use public IP only if different VPCs with no peering
+
+    retention: 2h                 # short local retention since we're shipping out
+
+  # Disable components you don't need (saves resources)
+alertmanager:
+  enabled: false
+
+grafana:
+  enabled: false                # we have a separate Grafana
+
+nodeExporter:
+  enabled: true
+
+kubeStateMetrics:
+  enabled: true
+
