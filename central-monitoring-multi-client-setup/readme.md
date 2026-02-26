@@ -33,11 +33,11 @@ No LoadBalancers. No Ingress. No exposing your clusters to the world. Prometheus
 │  │  │  clientName=client-1  │  │   │  │  clientName=client-2  │  │      │
 │  │  └───────────┬───────────┘  │   │  └───────────┬───────────┘  │      │
 │  └──────────────│──────────────┘   └──────────────│──────────────┘      │
-│                 │  remote_write                    │  remote_write      │
-│                 │  (outbound, port 9090)           │  (outbound, 9090)  │
-│                 └──────────────────┬───────────────┘                    │
+│                 │  remote_write                   │  remote_write       │
+│                 │  (outbound, port 9090)          │  (outbound, 9090)   │
+│                 └──────────────────┬──────────────┘                     │ 
 │                                    ▼                                    │
-│                     ┌────────────────────────── ┐                        │
+│                     ┌────────────────────────── ┐                       │
 │                     │    Central Prometheus     │                       │
 │                     │    EC2 · Docker           │                       │
 │                     │    65.0.81.49:9090        │                       │
@@ -48,12 +48,12 @@ No LoadBalancers. No Ingress. No exposing your clusters to the world. Prometheus
 │                                    │  data source (port 9090)           │
 │                                    ▼                                    │
 │                     ┌──────────────────────────┐                        │ 
-│                     │         Grafana          │                       │
-│                     │    EC2 · Docker          │                       │
-│                     │    15.206.153.237:3000   │                       │
-│                     │                          │                       │
-│                     │  Monitor-1 (overview)    │                       │
-│                     │  Monitor-2 (per client)  │                       │
+│                     │         Grafana          │                        │
+│                     │    EC2 · Docker          │                        │
+│                     │    15.206.153.237:3000   │                        │
+│                     │                          │                        │
+│                     │  Monitor-1 (overview)    │                        │
+│                     │  Monitor-2 (per client)  │                        │
 │                     └──────────────────────────┘                        │
 └─────────────────────────────────────────────────────────────────────────┘
 ```
