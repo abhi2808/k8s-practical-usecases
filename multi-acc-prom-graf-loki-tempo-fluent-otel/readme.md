@@ -17,24 +17,24 @@ Metrics + Logs + Traces from multiple EKS clusters across AWS accounts, unified 
   │  │ otel-collector  │    │              │  │otel-collector│  │
   │  └────────┬────────┘    │              │  └──────┬───────┘  │
   └───────────┼─────────────┘              └─────────┼──────────┘
-              │  :9090  remote_write  (metrics)       │
-              │  :3100  loki push     (logs)           │
-              │  :4317  otlp grpc     (traces)         │
-              └──────────────────┬────────────────────┘
+              │  :9090  remote_write  (metrics)      │
+              │  :3100  loki push     (logs)         │
+              │  :4317  otlp grpc     (traces)       │
+              └──────────────────┬───────────────────┘
                                  ▼
                    ┌─────────────────────────┐
-                   │  Central EC2             │
-                   │  Prometheus  :9090       │
-                   │  Loki        :3100       │
-                   │  Tempo 2.4.2 :3200/4317  │
+                   │  Central EC2            │
+                   │  Prometheus  :9090      │
+                   │  Loki        :3100      │
+                   │  Tempo 2.4.2 :3200/4317 │
                    └────────────┬────────────┘
                                 ▼
                    ┌─────────────────────────┐
-                   │  Grafana EC2  :3000      │
-                   │  Monitor-1 (Accounts)    │
-                   │  Monitor-2 (Clusters)    │
-                   │  Monitor-3 (Detail +     │
-                   │   Metrics + Logs+Traces) │
+                   │  Grafana EC2  :3000     │
+                   │  Monitor-1 (Accounts)   │
+                   │  Monitor-2 (Clusters)   │
+                   │  Monitor-3 (Detail +    │
+                   │  Metrics + Logs+Traces) │
                    └─────────────────────────┘
 ```
 
