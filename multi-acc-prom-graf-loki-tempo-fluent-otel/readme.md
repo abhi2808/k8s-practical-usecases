@@ -894,6 +894,7 @@ kubectl apply -f dep.yml
 | Latency p50/p95/p99 | Prometheus | `histogram_quantile(0.95, sum(rate(traces_spanmetrics_latency_bucket{...}[5m])) by (le, service_name))` |
 | Recent Traces | Tempo (TraceQL) | `{ resource.awsAccount = "$account" && resource.clusterName = "$cluster" }` |
 
+
 > NOTE: Request Rate and Latency panels require span metrics flowing from Tempo → Prometheus. Verify with `traces_spanmetrics_calls_total`.  
 > NOTE: Recent Traces queries Tempo directly — works as soon as traces are flowing, no span metrics needed.
 
