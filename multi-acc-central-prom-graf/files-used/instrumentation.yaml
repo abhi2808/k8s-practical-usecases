@@ -1,0 +1,19 @@
+apiVersion: opentelemetry.io/v1alpha1
+kind: Instrumentation
+metadata:
+  name: python-instrumentation
+  namespace: default
+spec:
+  exporter:
+    endpoint: http://otel-collector-opentelemetry-collector.monitoring.svc.cluster.local:4318
+  propagators:
+    - tracecontext
+    - baggage
+  python:
+    env:
+      - name: OTEL_SERVICE_NAME
+        value: sample-app
+      - name: OTEL_RESOURCE_ATTRIBUTES
+        value: awsAccount=account-1,clusterName=cluster-1
+      - name: OTEL_EXPORTER_OTLP_PROTOCOL
+        value: http/protobuf
