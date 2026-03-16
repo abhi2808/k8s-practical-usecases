@@ -899,5 +899,3 @@ kubectl apply -f dep.yml
 > NOTE: Recent Traces queries Tempo directly — works as soon as traces are flowing, no span metrics needed.
 
 ---
-
-*Minfy Technologies — Internal Documentation*
