@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: load-generator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: load-generator
+  template:
+    metadata:
+      labels:
+        app: load-generator
+    spec:
+      containers:
+        - name: load-generator
+          image: busybox
+          command: ["/bin/sh", "-c"]
+          args:
+            - while true; do
+                wget -q -O- http://demo-app-svc/;
+              done
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "64Mi"
