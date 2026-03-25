@@ -105,7 +105,7 @@ aws iam create-role \
 
 ## Step 5 — Attach Required Node Policies
 
-> ⚠️ **Critical — do not skip any of these four.** Missing `AmazonEKSWorkerNodePolicy` is the most common reason Karpenter-provisioned nodes boot successfully but never register with the cluster. The node calls `ec2:DescribeInstances` during bootstrap to discover itself — without this policy it gets a 403 and the bootstrap loop silently fails.
+> **Critical — do not skip any of these four.** Missing `AmazonEKSWorkerNodePolicy` is the most common reason Karpenter-provisioned nodes boot successfully but never register with the cluster. The node calls `ec2:DescribeInstances` during bootstrap to discover itself — without this policy it gets a 403 and the bootstrap loop silently fails.
 
 Attach each policy individually to make sure none get missed:
 
@@ -159,7 +159,7 @@ aws iam add-role-to-instance-profile \
 
 The controller role is assumed by the Karpenter pod itself via IRSA. It gives Karpenter permission to call EC2 APIs to launch and terminate instances.
 
-> ⚠️ The OIDC issuer URL must have the `https://` prefix stripped in the trust policy. The `${OIDC_ENDPOINT#*//}` shell substitution handles this automatically — do not hardcode the URL manually or you'll get a malformed ARN.
+> The OIDC issuer URL must have the `https://` prefix stripped in the trust policy. The `${OIDC_ENDPOINT#*//}` shell substitution handles this automatically — do not hardcode the URL manually or you'll get a malformed ARN.
 
 ```bash
 cat > controller-trust-policy.json << EOF
@@ -287,7 +287,7 @@ You should see all 6 Sids listed.
 
 ## Step 9 — Tag Subnets & Security Group
 
-> ⚠️ **Do not skip this.** The `EC2NodeClass` uses these tags to discover which subnets and security groups to use when launching nodes. Missing tags = Karpenter cannot find any subnets = `NodeClassNotReady` and no nodes will ever launch.
+> **Do not skip this.** The `EC2NodeClass` uses these tags to discover which subnets and security groups to use when launching nodes. Missing tags = Karpenter cannot find any subnets = `NodeClassNotReady` and no nodes will ever launch.
 
 ```bash
 # Tag subnets across all nodegroups
@@ -328,9 +328,34 @@ You should see subnets across multiple AZs and the cluster SG. If either table i
 
 ---
 
-## Step 10 — Map Node Role to aws-auth
+## Step 10 — Grant Karpenter Nodes Cluster Access
 
-Allows Karpenter-provisioned nodes to authenticate with the Kubernetes API and join the cluster.
+This step allows Karpenter-provisioned nodes to authenticate with the Kubernetes API and join the cluster. **The correct approach depends on your cluster's authentication mode** — using the wrong method means nodes will boot successfully but never register.
+
+### Determine Your Cluster's Authentication Mode
+
+```bash
+aws eks describe-cluster \
+  --name $CLUSTER_NAME \
+  --query 'cluster.accessConfig' \
+  --output table
+```
+
+The `authenticationMode` field will be one of:
+
+| Value | What it means |
+|---|---|
+| `CONFIG_MAP` | Uses the `aws-auth` ConfigMap (classic, pre-EKS 1.21) |
+| `API` | Uses EKS Access Entries only — `aws-auth` is **completely ignored** |
+| `API_AND_CONFIG_MAP` | Supports both methods |
+
+> **If your cluster is in `API` mode and you add the role to `aws-auth`, nothing will happen.** The ConfigMap is silently ignored. Nodes will boot, pass EC2 health checks, and then fail to join — with no obvious error message pointing to auth. Use the Access Entries path below instead.
+
+---
+
+### Option A — ConfigMap Mode (`CONFIG_MAP` or `API_AND_CONFIG_MAP`)
+
+Maps the node role into the `aws-auth` ConfigMap so Kubernetes recognises it:
 
 ```bash
 eksctl create iamidentitymapping \
@@ -348,6 +373,39 @@ kubectl get configmap aws-auth -n kube-system -o yaml | grep -A 4 "KarpenterNode
 ```
 
 You should see your role ARN with `system:bootstrappers` and `system:nodes` groups.
+
+---
+
+### Option B — API Mode (`API` or `API_AND_CONFIG_MAP`)
+
+Check whether the node role already has an access entry:
+
+```bash
+aws eks list-access-entries \
+  --cluster-name $CLUSTER_NAME \
+  --output table
+```
+
+If `KarpenterNodeRole-${CLUSTER_NAME}` is not listed, create the access entry:
+
+```bash
+aws eks create-access-entry \
+  --cluster-name $CLUSTER_NAME \
+  --principal-arn "arn:${AWS_PARTITION}:iam::${AWS_ACCOUNT_ID}:role/KarpenterNodeRole-${CLUSTER_NAME}" \
+  --type EC2_LINUX
+```
+
+> The `EC2_LINUX` type automatically grants the `system:bootstrappers` and `system:nodes` permissions required for node registration — you do not need to attach an additional access policy.
+
+Verify the entry was created:
+
+```bash
+aws eks list-access-entries \
+  --cluster-name $CLUSTER_NAME \
+  --output table
+```
+
+You should now see the `KarpenterNodeRole` ARN in the list.
 
 ---
 
@@ -428,7 +486,7 @@ Expected output: `v1beta1`. If it says `v1`, your CRD version doesn't match the 
 
 The EC2NodeClass defines AWS-specific settings: which subnets to use, which security groups, which AMI family, and which instance profile.
 
-> ⚠️ Use `instanceProfile` here, **not** `role`. In `v1beta1`, the `role` field triggers Karpenter to try to create a new instance profile dynamically — which requires `iam:CreateInstanceProfile` on the controller role. Using `instanceProfile` directly points to the one we already created in Step 6 and avoids that permission issue entirely. Also note that switching between `role` and `instanceProfile` on an existing EC2NodeClass is not supported — you must delete and recreate it.
+> Use `instanceProfile` here, **not** `role`. In `v1beta1`, the `role` field triggers Karpenter to try to create a new instance profile dynamically — which requires `iam:CreateInstanceProfile` on the controller role. Using `instanceProfile` directly points to the one we already created in Step 6 and avoids that permission issue entirely. Also note that switching between `role` and `instanceProfile` on an existing EC2NodeClass is not supported — you must delete and recreate it.
 
 ```bash
 cat > ec2nodeclass.yaml << 'EOF'
@@ -467,9 +525,9 @@ You should see `Status: True` and `Type: Ready`. If it shows `NodeClassNotReady`
 
 The NodePool defines what kinds of nodes Karpenter is allowed to create.
 
-> ⚠️ **Always set `limits`.** Without them, a misconfigured deployment or a runaway HPA could trigger Karpenter to scale to hundreds of nodes before anyone notices. The limits below cap the total CPU and memory Karpenter can provision across all nodes — treat this as your safety net.
+> **Always set `limits`.** Without them, a misconfigured deployment or a runaway HPA could trigger Karpenter to scale to hundreds of nodes before anyone notices. The limits below cap the total CPU and memory Karpenter can provision across all nodes — treat this as your safety net.
 
-> ⚠️ **v1beta1 naming differences from v1** — `consolidationPolicy` only supports `WhenUnderutilized` or `WhenEmpty` in this version. The `WhenEmptyOrUnderutilized` value and the `consolidateAfter` field are v1-only features and will cause a `strict decoding error` if used here.
+> **v1beta1 naming differences from v1** — `consolidationPolicy` only supports `WhenUnderutilized` or `WhenEmpty` in this version. The `WhenEmptyOrUnderutilized` value and the `consolidateAfter` field are v1-only features and will cause a `strict decoding error` if used here.
 
 ```bash
 cat > nodepool.yaml << 'EOF'
