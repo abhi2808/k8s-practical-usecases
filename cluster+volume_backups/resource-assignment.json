@@ -1,0 +1,13 @@
+{
+  "SelectionName": "eks-resources",
+  "IamRoleArn": "arn:aws:iam::185863138492:role/AWSBackupEKSRole2",
+  "Resources": [
+    "arn:aws:eks:ap-south-1:185863138492:cluster/POC-AWS-Backup"
+  ],
+  "Conditions": {
+    "StringEquals": [{
+      "ConditionKey": "aws:ResourceTag/backup",
+      "ConditionValue": "enabled"
+    }]
+  }
+}

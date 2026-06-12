@@ -1,0 +1,29 @@
+{
+  "BackupPlanName": "eks-backup-plan",
+  "Rules": [
+    {
+      "RuleName": "daily-eks-backup",
+      "TargetBackupVaultName": "poc-backup-vault",
+      "ScheduleExpression": "cron(0 18 * * ? *)",
+      "StartWindowMinutes": 60,
+      "CompletionWindowMinutes": 180,
+      "Lifecycle": { "DeleteAfterDays": 7 }
+    },
+    {
+      "RuleName": "weekly-eks-backup",
+      "TargetBackupVaultName": "poc-backup-vault",
+      "ScheduleExpression": "cron(0 18 ? * SUN *)",
+      "StartWindowMinutes": 60,
+      "CompletionWindowMinutes": 360,
+      "Lifecycle": { "DeleteAfterDays": 30 }
+    },
+    {
+      "RuleName": "monthly-eks-backup",
+      "TargetBackupVaultName": "poc-backup-vault",
+      "ScheduleExpression": "cron(0 18 1 * ? *)",
+      "StartWindowMinutes": 60,
+      "CompletionWindowMinutes": 720,
+      "Lifecycle": { "DeleteAfterDays": 365 }
+    }
+  ]
+}

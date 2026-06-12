@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: poc-test-app
+  namespace: poc-appteam
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: poc-test
+  template:
+    metadata:
+      labels:
+        app: poc-test
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:latest
+          ports:
+            - containerPort: 80

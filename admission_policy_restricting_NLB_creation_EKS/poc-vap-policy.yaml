@@ -1,0 +1,28 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: deny-loadbalancer-developers
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+      - apiGroups:   [""]
+        apiVersions: ["v1"]
+        operations:  ["CREATE", "UPDATE"]
+        resources:   ["services"]
+  validations:
+    - expression: >
+        !(object.spec.type == "LoadBalancer" &&
+        request.userInfo.groups.exists(g, g.endsWith("-developers")))
+      message: >
+        ERROR: Developer groups are not permitted to create LoadBalancer
+        Services. Please contact your platform team.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: deny-loadbalancer-developers-binding
+spec:
+  policyName: deny-loadbalancer-developers
+  validationActions: [Deny]
+  matchResources: {}

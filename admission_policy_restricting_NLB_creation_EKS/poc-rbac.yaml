@@ -1,0 +1,57 @@
+# Role for developers in their namespace
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: poc-developer-role
+  namespace: poc-appteam
+rules:
+  - apiGroups: [""]
+    resources: ["pods", "services", "deployments"]
+    verbs: ["get", "list", "create", "update", "delete"]
+  - apiGroups: ["apps"]
+    resources: ["deployments"]
+    verbs: ["get", "list", "create", "update", "delete"]
+---
+# Bind developer role to poc-developers group
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: poc-developer-rb
+  namespace: poc-appteam
+subjects:
+  - kind: Group
+    name: poc-developers
+    apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: Role
+  name: poc-developer-role
+  apiGroup: rbac.authorization.k8s.io
+---
+# Role for platform in app namespace
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: poc-platform-role
+  namespace: poc-appteam
+rules:
+  - apiGroups: [""]
+    resources: ["pods", "services", "deployments"]
+    verbs: ["get", "list", "create", "update", "delete"]
+  - apiGroups: ["apps"]
+    resources: ["deployments"]
+    verbs: ["get", "list", "create", "update", "delete"]
+---
+# Bind platform role to poc-platform group in app namespace
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: poc-platform-rb
+  namespace: poc-appteam
+subjects:
+  - kind: Group
+    name: poc-platform
+    apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: Role
+  name: poc-platform-role
+  apiGroup: rbac.authorization.k8s.io

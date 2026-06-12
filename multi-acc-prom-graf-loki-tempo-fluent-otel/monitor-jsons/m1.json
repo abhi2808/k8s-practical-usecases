@@ -1,0 +1,247 @@
+{
+  "__inputs": [],
+  "__requires": [],
+  "annotations": { "list": [] },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": null,
+  "links": [],
+  "panels": [
+    {
+      "type": "table",
+      "title": "🏠 Accounts Overview",
+      "gridPos": { "h": 14, "w": 24, "x": 0, "y": 0 },
+      "options": {
+        "cellHeight": "md",
+        "footer": { "countRows": false, "fields": "", "reducer": ["sum"], "show": false },
+        "showHeader": true,
+        "sortBy": [{ "desc": false, "displayName": "Account" }]
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "left",
+            "cellOptions": { "type": "auto" },
+            "filterable": false,
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "red", "value": 80 }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": { "id": "byName", "options": "Account" },
+            "properties": [
+              { "id": "custom.width", "value": 200 },
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "targetBlank": false,
+                    "title": "Open ${__value.text} clusters",
+                    "url": "/d/monitor-2/monitor-2?var-account=${__value.text}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": { "id": "byName", "options": "Health" },
+            "properties": [
+              { "id": "custom.width", "value": 120 },
+              { "id": "custom.cellOptions", "value": { "type": "color-background", "mode": "gradient" } },
+              {
+                "id": "mappings",
+                "value": [
+                  { "type": "value", "options": { "1": { "text": "● Healthy", "color": "green", "index": 0 } } },
+                  { "type": "value", "options": { "0": { "text": "● Unhealthy", "color": "red", "index": 1 } } }
+                ]
+              },
+              { "id": "thresholds", "value": { "mode": "absolute", "steps": [{ "color": "red", "value": null }, { "color": "green", "value": 1 }] } }
+            ]
+          },
+          {
+            "matcher": { "id": "byName", "options": "Clusters" },
+            "properties": [{ "id": "custom.width", "value": 100 }]
+          },
+          {
+            "matcher": { "id": "byName", "options": "CPU Usage %" },
+            "properties": [
+              { "id": "custom.width", "value": 150 },
+              { "id": "unit", "value": "percent" },
+              { "id": "decimals", "value": 1 },
+              { "id": "custom.cellOptions", "value": { "type": "gauge", "mode": "gradient" } },
+              { "id": "thresholds", "value": { "mode": "absolute", "steps": [{ "color": "green", "value": null }, { "color": "yellow", "value": 60 }, { "color": "red", "value": 85 }] } },
+              { "id": "min", "value": 0 },
+              { "id": "max", "value": 100 }
+            ]
+          },
+          {
+            "matcher": { "id": "byName", "options": "Memory Usage %" },
+            "properties": [
+              { "id": "custom.width", "value": 150 },
+              { "id": "unit", "value": "percent" },
+              { "id": "decimals", "value": 1 },
+              { "id": "custom.cellOptions", "value": { "type": "gauge", "mode": "gradient" } },
+              { "id": "thresholds", "value": { "mode": "absolute", "steps": [{ "color": "green", "value": null }, { "color": "yellow", "value": 70 }, { "color": "red", "value": 90 }] } },
+              { "id": "min", "value": 0 },
+              { "id": "max", "value": 100 }
+            ]
+          },
+          {
+            "matcher": { "id": "byName", "options": "Nodes" },
+            "properties": [{ "id": "custom.width", "value": 80 }]
+          },
+          {
+            "matcher": { "id": "byName", "options": "Pods Ready" },
+            "properties": [
+              { "id": "custom.width", "value": 110 },
+              { "id": "custom.cellOptions", "value": { "type": "color-text" } },
+              { "id": "thresholds", "value": { "mode": "absolute", "steps": [{ "color": "green", "value": null }] } }
+            ]
+          },
+          {
+            "matcher": { "id": "byName", "options": "Pods Not Ready" },
+            "properties": [
+              { "id": "custom.width", "value": 130 },
+              { "id": "custom.cellOptions", "value": { "type": "color-text" } },
+              { "id": "thresholds", "value": { "mode": "absolute", "steps": [{ "color": "green", "value": null }, { "color": "red", "value": 1 }] } },
+              {
+                "id": "mappings",
+                "value": [
+                  { "type": "value", "options": { "0": { "text": "0", "color": "green", "index": 0 } } }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "expr": "min by (awsAccount) (up{job=~\".*kube.*|.*node.*\"})",
+          "format": "table",
+          "instant": true,
+          "legendFormat": "__auto",
+          "refId": "Health"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "expr": "count by (awsAccount) (group by (awsAccount, clusterName) (kube_node_info))",
+          "format": "table",
+          "instant": true,
+          "legendFormat": "__auto",
+          "refId": "Clusters"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "expr": "count by (awsAccount) (kube_node_info)",
+          "format": "table",
+          "instant": true,
+          "legendFormat": "__auto",
+          "refId": "Nodes"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "expr": "count by (awsAccount) (kube_pod_status_phase{phase=\"Running\"} == 1)",
+          "format": "table",
+          "instant": true,
+          "legendFormat": "__auto",
+          "refId": "PodsReady"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "expr": "count by (awsAccount) (kube_pod_status_phase{phase!=\"Running\", phase!=\"Succeeded\"} == 1) or (group by (awsAccount) (kube_node_info) * 0)",
+          "format": "table",
+          "instant": true,
+          "legendFormat": "__auto",
+          "refId": "PodsNotReady"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "expr": "sum by (awsAccount) (rate(node_cpu_seconds_total{mode!=\"idle\"}[5m])) / sum by (awsAccount) (rate(node_cpu_seconds_total[5m])) * 100",
+          "format": "table",
+          "instant": true,
+          "legendFormat": "__auto",
+          "refId": "CPU"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "expr": "sum by (awsAccount) (node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) / sum by (awsAccount) (node_memory_MemTotal_bytes) * 100",
+          "format": "table",
+          "instant": true,
+          "legendFormat": "__auto",
+          "refId": "Memory"
+        }
+      ],
+      "transformations": [
+        { "id": "joinByField", "options": { "byField": "awsAccount", "mode": "outer" } },
+        {
+          "id": "filterFieldsByName",
+          "options": {
+            "include": {
+              "names": ["awsAccount", "Value #Health", "Value #Clusters", "Value #Nodes", "Value #PodsReady", "Value #PodsNotReady", "Value #CPU", "Value #Memory"]
+            }
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "renameByName": {
+              "awsAccount": "Account",
+              "Value #Health": "Health",
+              "Value #Clusters": "Clusters",
+              "Value #Nodes": "Nodes",
+              "Value #PodsReady": "Pods Ready",
+              "Value #PodsNotReady": "Pods Not Ready",
+              "Value #CPU": "CPU Usage %",
+              "Value #Memory": "Memory Usage %"
+            },
+            "indexByName": {
+              "awsAccount": 0,
+              "Value #Health": 1,
+              "Value #Clusters": 2,
+              "Value #Nodes": 3,
+              "Value #PodsReady": 4,
+              "Value #PodsNotReady": 5,
+              "Value #CPU": 6,
+              "Value #Memory": 7
+            }
+          }
+        }
+      ],
+      "datasource": { "type": "prometheus", "uid": "${datasource}" }
+    }
+  ],
+  "refresh": "30s",
+  "schemaVersion": 38,
+  "tags": ["monitoring", "overview"],
+  "templating": {
+    "list": [
+      {
+        "current": {},
+        "hide": 0,
+        "includeAll": false,
+        "name": "datasource",
+        "options": [],
+        "query": "prometheus",
+        "refresh": 1,
+        "type": "datasource",
+        "label": "Data Source"
+      }
+    ]
+  },
+  "time": { "from": "now-1h", "to": "now" },
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "Monitor-1",
+  "uid": "monitor-1",
+  "version": 1
+}
